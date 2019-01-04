@@ -3,9 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 
-Vue.config.productionTip = false
+import './assets/css/index.styl'
 
-/* eslint-disable no-new */
+Vue.config.productionTip = false
+/* eslint-disable  */
 new Vue({
   el: '#app',
   components: { App },
