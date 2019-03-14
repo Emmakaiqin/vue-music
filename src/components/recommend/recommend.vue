@@ -19,16 +19,18 @@
 </template>
 <script>
 import Slider from "@/base/slider/slider"
-import { getRecommend } from "@/api/recommend"
+import { getRecommend, getDiscList } from "@/api/recommend"
 import { ERR_OK } from "@/api/config"
 export default {
     data() {
         return {
-            recommends: []
+            recommends: [],
+            discList: []
         }
     },
     created() {
-        this._getRecommend()//获取数据
+        this._getRecommend()//轮播获取数据
+        this._getDiscList()//歌单数据
     },
     components: {
         Slider
@@ -39,6 +41,14 @@ export default {
                 if (res.code === ERR_OK) {
                     console.log('recommend数据:', res.data)
                     this.recommends = res.data.slider
+                }
+            })
+        },
+        _getDiscList() {
+            getDiscList().then((res) => {
+                if (res.code === ERR_OK) {
+                    console.log('discList:', res, res.songlist)
+                    this.discList = res.songlist
                 }
             })
         }
