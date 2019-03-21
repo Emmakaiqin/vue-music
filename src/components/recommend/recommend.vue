@@ -139,11 +139,5 @@ export default {
             width 100%
             top 50%
             transform translateY(-50%)
-    .loading-container
-        position absolute
-        width 100%
-        top 50%
-        // left 50%
-        transform translateY(-50%)
 </style>
 
