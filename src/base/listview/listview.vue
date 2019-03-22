@@ -1,13 +1,25 @@
 <template>
-    <div class='listview'>
-    </div>
+    <scroll class='listview'>
+        <ul class='list-group' v-for="(group,i) in data" :key='i'>
+            <li v-for='(item,index) in group.items' :key='"item.singer_mid"+index'>
+                <img class='avatar' :src='item.singer_pic'>
+                <span class='name'>{{item.singer_name}}</span>
+            </li>
+        </ul>
+    </scroll>
 </template>
 <script>
+import Scroll from "@base/scroll/scroll";
 export default {
+    components: {
+        Scroll
+    },
     props: {
-        title: {
-            type: String,
-            default: '加载中...'
+        data: {
+            type: Array,
+            default() {
+                return []
+            }
         }
     },
 }

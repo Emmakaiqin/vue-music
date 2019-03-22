@@ -1,14 +1,18 @@
 
 <template>
     <div class="singer">
-
+        <list-view :data='singers'></list-view>
     </div>
 </template>
 <script>
 import singer from "./singer.json"
+import ListView from "@/base/listview/listview"
 const HOTE_NAME = '热门'
 const HOT_SINGER_LEN = 10
 export default {
+    components: {
+        ListView
+    },
     data() {
         return {
             singers: []
@@ -21,9 +25,8 @@ export default {
         _getSingerList() {
             let list = JSON.parse(JSON.stringify(singer))
             console.log(singer)
-            this.singers = list.singerlist
-            let newlist = this._normazileSingers(this.singers)
-            console.log(newlist)
+            this.singers = this._normazileSingers(list.singerlist)
+            console.log(this.singers)
         },
         _normazileSingers(list) {
             let map = {
