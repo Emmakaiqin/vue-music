@@ -1,9 +1,14 @@
 <template>
-    <scroll class='listview'>
-        <ul class='list-group' v-for="(group,i) in data" :key='i'>
-            <li v-for='(item,index) in group.items' :key='"item.singer_mid"+index'>
-                <img class='avatar' :src='item.singer_pic'>
-                <span class='name'>{{item.singer_name}}</span>
+    <scroll class='listview' :data='data'>
+        <ul>
+            <li v-for="(group,i) in data" :key='i' class='list-group'>
+                <h2 class='list-group-title'>{{group.title}}</h2>
+                <ul>
+                    <li v-for='(item,index) in group.items' :key='"item.singer_mid"+index' class="list-group-item">
+                        <img class='avatar' :src='item.singer_pic'>
+                        <span class='name'>{{item.singer_name}}</span>
+                    </li>
+                </ul>
             </li>
         </ul>
     </scroll>
@@ -32,8 +37,26 @@ export default {
     height 100%
     overflow hidden
     background $color-background
-    .list-goup
-        height 30px
-        line-height 30px
+    .list-group
+        padding-bottom 30px
+        .list-group-title
+            height 30px
+            line-height 30px
+            padding-left 20px
+            font-size $font-size-small
+            color $color-text-l
+            background $color-highlight-background
+        .list-group-item
+            display flex
+            align-items center
+            padding 20px 0 0 30px
+            .avatar
+                width 50px
+                height 50px
+                border-radius 50%
+            .name
+                margin-left 20px
+                color $color-text-l
+                font-size $font-size-medium
 </style>
 
