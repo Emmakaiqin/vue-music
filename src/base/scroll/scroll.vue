@@ -23,21 +23,19 @@ export default {
             type: Array,
             default() {
                 return []
-            }
-        }
+            },
+        },
     },
 
     data() {
-        return {
-        }
+        return {}
     },
     mounted() {
         setTimeout(() => {
             this._initScroll()
-        }, 20);
+        }, 20)
     },
-    destroyed() {
-    },
+    destroyed() {},
     methods: {
         _initScroll() {
             if (!this.$refs.scroll) {
@@ -46,7 +44,6 @@ export default {
             this.scroll = new BScroll(this.$refs.scroll, {
                 propoType: this.probeType,
                 click: this.click,
-
             })
         },
         enable() {
@@ -58,14 +55,21 @@ export default {
         refresh() {
             this.scroll && this.scroll.refresh()
         },
+        scrollTo() {
+            this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+        },
+        scrollToElement() {
+            //滚动到指定元素
+            this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+        },
     },
     watch: {
         data(val, oldval) {
             setTimeout(() => {
                 this.refresh()
-            }, 20);
-        }
-    }
+            }, 20)
+        },
+    },
 }
 </script>
 
