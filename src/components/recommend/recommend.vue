@@ -37,11 +37,11 @@
 </template>
 <script>
 import Scroll from '@/base/scroll/scroll'
-import Slider from "@/base/slider/slider"
-import Loading from "@/base/loading/loading"
-import { getRecommend, getDiscList } from "@/api/recommend"
-import { ERR_OK } from "@/api/config"
-import discList from "./discList.json"
+import Slider from '@/base/slider/slider'
+import Loading from '@/base/loading/loading'
+import { getRecommend, getDiscList } from '@/api/recommend'
+import { ERR_OK } from '@/api/config'
+import discList from './discList.json'
 export default {
     data() {
         return {
@@ -51,13 +51,13 @@ export default {
         }
     },
     created() {
-        this._getRecommend()//轮播获取数据
-        this._getDiscList()//歌单数据
+        this._getRecommend() //轮播获取数据
+        this._getDiscList() //歌单数据
     },
     components: {
         Slider,
         Scroll,
-        Loading
+        Loading,
     },
     methods: {
         loadImg() {
@@ -68,7 +68,7 @@ export default {
             }
         },
         _getRecommend() {
-            getRecommend().then((res) => {
+            getRecommend().then(res => {
                 if (res.code === ERR_OK) {
                     this.recommends = res.data.slider
                 }
@@ -86,7 +86,7 @@ export default {
                 singerName = singerName.join(' ')
                 return { album, url, singerName }
             })
-        }
+        },
     },
 }
 </script>
