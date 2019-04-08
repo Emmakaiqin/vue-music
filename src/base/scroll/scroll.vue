@@ -1,7 +1,6 @@
 <template>
     <div class="scroll" ref="scroll">
-        <slot>
-        </slot>
+        <slot> </slot>
     </div>
 </template>
 
@@ -19,11 +18,14 @@ export default {
             type: Boolean,
             default: true,
         },
-        dada: {
+        data: {
             type: Array,
-            default() {
-                return []
-            },
+            default: null,
+        },
+        listenScroll: {
+            // 是否监听滚动事件
+            type: Boolean,
+            default: false,
         },
     },
 
@@ -45,6 +47,14 @@ export default {
                 propoType: this.probeType,
                 click: this.click,
             })
+            if (this.listenScroll) {
+                console.log(this.listenScroll, this.probeType)
+                //监听高度变化
+                let that = this
+                this.scroll.on('scroll', pos => {
+                    that.$emit('scroll', pos)
+                })
+            }
         },
         enable() {
             this.scroll && this.scroll.enable()
