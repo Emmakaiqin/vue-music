@@ -44,15 +44,13 @@ export default {
                 return
             }
             this.scroll = new BScroll(this.$refs.scroll, {
-                propoType: this.probeType,
+                probeType: this.probeType,
                 click: this.click,
             })
             if (this.listenScroll) {
-                console.log(this.listenScroll, this.probeType)
                 //监听高度变化
-                let that = this
                 this.scroll.on('scroll', pos => {
-                    that.$emit('scroll', pos)
+                    this.$emit('scroll', pos)
                 })
             }
         },

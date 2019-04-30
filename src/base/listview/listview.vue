@@ -36,13 +36,21 @@
                 </li>
             </ul>
         </div>
+        <div ref="fixed" class="list-fixed" v-show="fixedTitle">
+            <h1 class="fixed-title">{{ fixedTitle }}</h1>
+        </div>
+        <div class="loading-container" v-show="!data.length">
+            <loading></loading>
+        </div>
     </scroll>
 </template>
 <script>
 import Scroll from '@base/scroll/scroll'
 import { getData } from '@/assets/js/dom.js'
+import Loading from '@/base/loading/loading'
 
 const ANCHOR_HEIGHT = 18 //初始高度 一个索引样式高度为18
+const TITLE_HEIGHT = 30 // 每个索引标签的高度
 
 export default {
     created() {
@@ -59,10 +67,12 @@ export default {
             //data中数据会监听变化
             scrollY: -1, // 监听y轴滚动变化
             currentIndex: 0, // 当前显示第几个 高亮
+            diff: -1, // 当前滚动到title的底部离顶部的距离
         }
     },
     components: {
         Scroll,
+        Loading,
     },
     props: {
         data: {
@@ -78,6 +88,12 @@ export default {
                 return item.title.substr(0, 1)
             })
             return data
+        },
+        fixedTitle() {
+            if (this.scrollY > 0) {
+                return ''
+            }
+            return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
         },
     },
     methods: {
@@ -97,7 +113,6 @@ export default {
             this._scrollTo(anchorIndex)
         },
         scroll(pos) {
-            console.log('scroll begin')
             this.scrollY = pos.y
         },
         // 计算dom高度
@@ -115,9 +130,11 @@ export default {
             if (!index && index !== 0) {
                 return
             }
-            if (index < 0) {
+            if (index <= 0) {
+                // 顶部
                 index = 0
             } else if (index > this.listenHeight.length - 2) {
+                // 底部 比实际元素多了一个且下标从0开始,所以减2
                 index = this.listenHeight.length - 2
             }
             this.scrollY = -this.listenHeight[index]
@@ -125,17 +142,33 @@ export default {
         },
     },
     watch: {
-        scrollY(newy) {
+        scrollY(newY) {
             const listenHeight = this.listenHeight
-            for (let i = 0; i < listenHeight.length; i++) {
+            // 滚动到顶部 newY>0
+            if (newY >= 0) {
+                this.currentIndex = 0
+                return
+            }
+            // 中间部分滚动
+            for (let i = 0; i < listenHeight.length - 1; i++) {
                 let height1 = listenHeight[i]
                 let height2 = listenHeight[i + 1]
-                if (!height2 || (-newy > height1 && -newy < height2)) {
+                if (-newY >= height1 && -newY < height2) {
                     this.currentIndex = i
+                    this.diff = height2 + newY
                     return
                 }
             }
-            this.currentIndex = 0
+            // 当滚动到底部，且-newY大于最后一个元素的上限
+            this.currentIndex = listenHeight.length - 2
+        },
+        diff(newVal) {
+            let fixedTop = newVal > 0 && newVal < TITLE_HEIGHT ? newVal - TITLE_HEIGHT : 0
+            if (this.fixedTop === fixedTop) {
+                return
+            }
+            this.fixedTop = fixedTop
+            this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
         },
     },
 }
@@ -188,5 +221,17 @@ export default {
             font-size $font-size-small
         .current
             color $color-theme
+    .list-fixed
+        position absolute
+        top 0
+        left 0
+        width 100%
+        .fixed-title
+            height 30px
+            line-height 30px
+            padding-left 20px
+            font-size $font-size-small
+            color $color-text-l
+            background $color-highlight-background
 </style>
 
