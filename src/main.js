@@ -6,6 +6,8 @@ import router from './router'
 import FastClick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
 import './assets/css/index.styl'
+import store from './store'
+
 Vue.config.productionTip = false
 FastClick.attach(document.body)
 Vue.use(VueLazyLoad, {
@@ -17,4 +19,5 @@ new Vue({
   components: { App },
   template: '<App/>',
   router,
+  store,
 })

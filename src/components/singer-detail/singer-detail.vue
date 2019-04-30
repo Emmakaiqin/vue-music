@@ -5,13 +5,19 @@
     </transition>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
     components: {},
     data() {
         return {}
     },
-    created() {},
+    created() {
+        console.log(1, this.singer)
+    },
     methods: {},
+    computed: {
+        ...mapGetters(['singer']),
+    },
 }
 </script>
 <style lang="stylus" scoped>
