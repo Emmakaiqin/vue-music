@@ -11,9 +11,14 @@
             <div v-for="(group, i) in data" :key="i" class="list-group" ref="listGroup">
                 <h2 class="list-group-title">{{ group.title }}</h2>
                 <ul>
-                    <li v-for="(item, index) in group.items" :key="'item.singer_mid' + index" class="list-group-item">
-                        <img class="avatar" :src="item.singer_pic" />
-                        <span class="name">{{ item.singer_name }}</span>
+                    <li
+                        v-for="(item, index) in group.items"
+                        @click="selectItem(item)"
+                        :key="'item.id' + index"
+                        class="list-group-item"
+                    >
+                        <img class="avatar" :src="item.avatar" />
+                        <span class="name">{{ item.name }}</span>
                     </li>
                 </ul>
             </div>
@@ -59,9 +64,6 @@ export default {
         this.listenHeight = []
         this.probeType = 3
     },
-    mounted() {
-        this._calculateHeight()
-    },
     data() {
         return {
             //data中数据会监听变化
@@ -97,6 +99,9 @@ export default {
         },
     },
     methods: {
+        selectItem(item) {
+            this.$emit('selectItem', item)
+        },
         // 私有方法放下面,共有方法和绑定事件放上面
         onShortcutTouchStart(e) {
             // 获取点击项的索引
@@ -142,6 +147,11 @@ export default {
         },
     },
     watch: {
+        data() {
+            setTimeout(() => {
+                this._calculateHeight()
+            }, 20)
+        },
         scrollY(newY) {
             const listenHeight = this.listenHeight
             // 滚动到顶部 newY>0

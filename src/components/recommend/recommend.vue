@@ -1,7 +1,7 @@
 
 <template>
     <div class="recommend">
-        <scroll ref='scrolls' class="recommend-content" :data='discList'>
+        <scroll ref="scrolls" class="recommend-content" :data="discList">
             <div>
                 <div class="slider-wrapper" v-if="recommends.length">
                     <slider>
@@ -15,21 +15,27 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li v-for="item in discList" :key="item.album.id" class='item'>
-                            <div class='icon'>
+                        <li v-for="item in discList" :key="item.album.id" class="item">
+                            <div class="icon">
                                 <!--fastclick属性--needsclick,避免与BScroll click冲突-->
-                                <img width='60' class="needsclick" @load="loadImg()" height='60' v-lazy='item.album.img'
-                                    alt='...'>
+                                <img
+                                    width="60"
+                                    class="needsclick"
+                                    @load="loadImg()"
+                                    height="60"
+                                    v-lazy="item.album.img"
+                                    alt="..."
+                                />
                             </div>
-                            <div class='text'>
-                                <h2 class="name">{{item.album.name}}</h2>
-                                <p class="desc">{{item.singerName}}</p>
+                            <div class="text">
+                                <h2 class="name">{{ item.album.name }}</h2>
+                                <p class="desc">{{ item.singerName }}</p>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class='loading-container' v-show='!discList'>
+            <div class="loading-container" v-show="!discList">
                 <loading></loading>
             </div>
         </scroll>
@@ -91,7 +97,6 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-
 @import '~@assets/css/variable'
 .recommend
     position fixed

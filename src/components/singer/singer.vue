@@ -1,12 +1,14 @@
 
 <template>
     <div class="singer">
-        <list-view :data="singers"></list-view>
+        <list-view :data="singers" @selectItem="selectSinger"></list-view>
+        <router-view></router-view>
     </div>
 </template>
 <script>
-import singer from './singer.json'
+import { getSingerList } from '@/api/singer'
 import ListView from '@/base/listview/listview'
+import Singer from '@/assets/js/singer'
 const HOTE_NAME = '热门'
 const HOT_SINGER_LEN = 10
 export default {
@@ -22,9 +24,15 @@ export default {
         this._getSingerList()
     },
     methods: {
+        selectSinger(item) {
+            this.$router.push({ path: `/singer/${item.singer_id}` })
+        },
         _getSingerList() {
-            let list = JSON.parse(JSON.stringify(singer))
-            this.singers = this._normazileSingers(list.singerlist)
+            let list = ''
+            getSingerList().then(res => {
+                list = res.data
+                this.singers = this._normazileSingers(list.list)
+            })
         },
         _normazileSingers(list) {
             let map = {
@@ -36,17 +44,27 @@ export default {
             list.forEach((item, index) => {
                 if (index < HOT_SINGER_LEN) {
                     //前面的定义为热门
-                    map.hot.items.push(item)
+                    map.hot.items.push(
+                        new Singer({
+                            name: item.Fsinger_name,
+                            id: item.Fsinger_mid,
+                        })
+                    )
                 } else {
                     //根据姓氏排序
-                    const key = item.name_index
+                    const key = item.Findex
                     if (!map[key]) {
                         map[key] = {
                             title: key,
                             items: [],
                         }
                     }
-                    map[key].items.push(item)
+                    map[key].items.push(
+                        new Singer({
+                            name: item.Fsinger_name,
+                            id: item.Fsinger_mid,
+                        })
+                    )
                 }
             })
             let hot = []
@@ -59,6 +77,7 @@ export default {
                 } else if (val.title == '热门') {
                     hot.push(val)
                 } else {
+                    val.title = '#'
                     les.push(val)
                 }
             }
