@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         selectSinger(item) {
-            this.$router.push({ path: `/singer/${item.singer_id}` })
+            this.$router.push({ path: `/singer/${item.id}` })
             this.setSinger(item)
         },
         _getSingerList() {

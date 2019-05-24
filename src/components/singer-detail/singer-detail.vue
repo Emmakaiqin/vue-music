@@ -6,15 +6,44 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { getSingerDetail } from '@/api/singer'
+import { createSong } from '@/assets/js/song.js'
 export default {
     components: {},
     data() {
-        return {}
+        return {
+            songs: '',
+        }
     },
     created() {
+        this._getDetail()
         console.log('created:', this.singer)
     },
-    methods: {},
+    methods: {
+        _getDetail() {
+            if (!this.singer.id) {
+                // 无数据返回上一级
+                this.$router.push('/singer')
+                return
+            }
+            getSingerDetail(this.singer.id).then(res => {
+                if (res.code == 0) {
+                    this.songs = this._normalizeSongs(res.data.list)
+                    console.log('_getDetail:', res.data, this.songs)
+                }
+            })
+        },
+        _normalizeSongs(list) {
+            let ret = []
+            list.forEach(item => {
+                let { musicData } = item
+                if (musicData.songid && musicData.albumid) {
+                    ret.push(createSong(musicData))
+                }
+            })
+            return ret
+        },
+    },
     computed: {
         // 使用对象展开运算符将 getter 混入 computed 对象中
         ...mapGetters(['singer']),
