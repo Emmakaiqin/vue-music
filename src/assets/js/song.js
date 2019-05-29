@@ -18,8 +18,10 @@ export function createSong(musicData) {
     album: musicData.albumname,
     name: musicData.songname,
     duration: musicData.interval,
-    image: `https://y.gtimg.cn/music/photo_new/T001R300x300M000${musicData.albumid}.jpg?max_age=2592000`,
-    url: `https://tirdparty.gtimg.com/${musicData.songid}.m4a/fromtag=38`,
+    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
+    // url: `http://111.202.98.146/amobile.music.tc.qq.com/${musicData.songmid}.m4a?fromtag=46`,
+    url:
+      'http://111.202.98.146/amobile.music.tc.qq.com/C400001Qu4I30eVFYb.m4a?guid=1972071100&vkey=6AE257D4770E091643D98DCB4430A54D5419433942C4B0F2636DDDE8E6E649E3BD5F41FD6ED7B060E462EA18CD97BB8D39BA5546B7146BF1&uin=0&fromtag=66',
   })
 }
 

@@ -1,18 +1,21 @@
 
 <template>
     <transition name="slide">
-        <div class="singer-detail"></div>
+        <div class="singer-detail">
+            <music-list :title="title" :bgImage="bgImage" :songs="songs"></music-list>
+        </div>
     </transition>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { getSingerDetail } from '@/api/singer'
 import { createSong } from '@/assets/js/song.js'
+import MusicList from '@components/music-list/music-list'
 export default {
-    components: {},
+    components: { MusicList },
     data() {
         return {
-            songs: '',
+            songs: [],
         }
     },
     created() {
@@ -45,6 +48,12 @@ export default {
         },
     },
     computed: {
+        title() {
+            return this.singer.name
+        },
+        bgImage() {
+            return this.singer.avatar
+        },
         // 使用对象展开运算符将 getter 混入 computed 对象中
         ...mapGetters(['singer']),
     },
@@ -52,14 +61,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import '~@assets/css/variable'
-.singer-detail
-    position fixed
-    top 0
-    left 0
-    right 0
-    bottom 0
-    z-index 100
-    background-color $color-background
 .slide-enter-active, .slide-leave-active
     transition all 0.3s
 .slide-enter, .slide-leave-to
