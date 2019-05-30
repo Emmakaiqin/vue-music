@@ -5,7 +5,13 @@
         </div>
         <h1 class="title">{{ title }}</h1>
         <div class="bg-image" :style="bgStyle" ref="bgImg">
-            <div class="filter"></div>
+            <div class="play-wrapper">
+                <div class="play" v-show="songs && songs.length" ref="playBtn">
+                    <i class="icon-play"></i>
+                    <span class="text">随机播放全部</span>
+                </div>
+            </div>
+            <div class="filter" ref="filter"></div>
         </div>
         <div class="bg-layer" ref="layer"></div>
         <scroll
@@ -29,7 +35,10 @@
 import Scroll from '@/base/scroll/scroll'
 import SongList from '@/base/song-list/song-list'
 import Loading from '@/base/loading/loading'
+import { prefixStyle } from '@/assets/js/dom'
 const RESERVED_HEIGHT = 40
+const backdrop = prefixStyle('backdropFilter')
+const transform = prefixStyle('transform')
 export default {
     name: 'MusicList',
     components: {
@@ -85,16 +94,30 @@ export default {
             let zIndex = 0
             let paddingTop = '70%'
             let height = 0
+            let scale = 1 // 放大缩小
+            let blur = 0 // 模糊度
+            let display = 'block'
             let translateY = Math.max(this.minTranslateY, newY)
-            this.$refs.layer.style[`transform`] = `translate3d(0,${translateY}px,0)`
+            this.$refs.layer.style.transform = `translate3d(0,${translateY}px,0)`
+            const present = Math.abs(newY / this.imageHeighe)
+            if (newY > 0) {
+                scale = 1 + present
+                zIndex = 10
+            } else {
+                blur = Math.min(20 * present, 20)
+            }
             if (newY < this.minTranslateY) {
                 zIndex = 10
                 paddingTop = 0
                 height = `${RESERVED_HEIGHT}px`
+                display = 'none'
             }
+            this.$refs.filter.style.backdrop = `blur(${blur})`
             this.$refs.bgImg.style.paddingTop = paddingTop
             this.$refs.bgImg.style.height = height
             this.$refs.bgImg.style.zIndex = zIndex
+            this.$refs.bgImg.style.transform = `scale(${scale})`
+            this.$refs.playBtn.style.display = display
         },
     },
 }

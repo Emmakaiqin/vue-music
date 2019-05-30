@@ -1,9 +1,7 @@
 
 <template>
-    <transition name="slide">
-        <div class="singer-detail">
-            <music-list :title="title" :bgImage="bgImage" :songs="songs"></music-list>
-        </div>
+    <transition name="singer-slide">
+        <music-list :title="title" :bgImage="bgImage" :songs="songs"></music-list>
     </transition>
 </template>
 <script>
@@ -32,7 +30,6 @@ export default {
             getSingerDetail(this.singer.id).then(res => {
                 if (res.code == 0) {
                     this.songs = this._normalizeSongs(res.data.list)
-                    console.log('_getDetail:', res.data, this.songs)
                 }
             })
         },
@@ -61,9 +58,9 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import '~@assets/css/variable'
-.slide-enter-active, .slide-leave-active
+.singer-slide-enter-active, .singer-slide-leave-active
     transition all 0.3s
-.slide-enter, .slide-leave-to
+.singer-slide-enter, .singer-slide-leave-to
     transform translate3d(100%, 100%, 0)
 </style>
 
