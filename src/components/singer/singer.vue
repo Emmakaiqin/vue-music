@@ -29,6 +29,9 @@ export default {
         selectSinger(item) {
             this.$router.push({ path: `/singer/${item.id}` })
             this.setSinger(item)
+            // commit方法
+            // this.$store.commit('SET_SINGER', item)
+            // console.log(123, this.$store.state.singer)
         },
         _getSingerList() {
             let list = ''

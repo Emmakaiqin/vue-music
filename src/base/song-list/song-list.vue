@@ -2,7 +2,7 @@
 <template>
     <div class="song-list">
         <ul>
-            <li v-for="(item, index) in songs" :key="index" class="item">
+            <li @click="selectItem(item, index)" v-for="(item, index) in songs" :key="index" class="item">
                 <div class="rank" v-show="rank">
                     <span :class="getRankCls(index)" v-text="getRankText(index)"></span>
                 </div>
@@ -31,6 +31,9 @@ export default {
         },
         getRankCls(index) {},
         getRankText(index) {},
+        selectItem(item, index) {
+            this.$emit('selectItem', item, index)
+        },
     },
     computed: {},
     props: {
