@@ -15,25 +15,31 @@
                 <div class="middle">
                     <div class="middle-l">
                         <div class="cd-wrapper" ref="cdWrapper">
-                            <div class="cd">
+                            <div class="cd" :class="cdCls">
                                 <img class="image" :src="currentSong.image" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="bottom">
+                    <div class="progreff-wrapper">
+                        <span class="time time-l">{{ currentTime }}</span>
+                        <div class='progress-bar-warpper'></div>
+                        <span></span>
+                        <span class="time time-r">{{ currentTime }}</span>
+                    </div>
                     <div class="operators">
                         <div class="icon i-left">
                             <i class="icon-sequence"></i>
                         </div>
                         <div class="icon i-left">
-                            <i class="icon-sequence"></i>
+                            <i @click="prev" class="icon-prev"></i>
                         </div>
                         <div class="icon i-center">
-                            <i class="icon-play"></i>
+                            <i @click="togglePLay" :class="playIcon"></i>
                         </div>
                         <div class="icon i-right">
-                            <i class="icon-next"></i>
+                            <i @click="next" class="icon-next"></i>
                         </div>
                         <div class="icon i-right">
                             <i class="icon icon-not-favorite"></i>
@@ -45,21 +51,21 @@
         <transition name="mini">
             <div class="mini-player" v-show="!fullScreen" @click="doFullScreen(true)">
                 <div class="icon">
-                    <img width="40" height="40" :src="currentSong.image" />
+                    <img width="40" :class="cdCls" height="40" :src="currentSong.image" />
                 </div>
                 <div class="text">
                     <h2 class="name">{{ currentSong.name }}</h2>
                     <p class="desc">{{ currentSong.singer }}</p>
                 </div>
                 <div class="control">
-                    <i class="icon-mini"></i>
+                    <i @click.stop="togglePLay" :class="miniIcon"></i>
                 </div>
                 <div class="control">
                     <i class="icon-playlist"></i>
                 </div>
             </div>
         </transition>
-        <audio ref="audio" :src="currentSong.url"></audio>
+        <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
     </div>
 </template>
 <script>
@@ -73,14 +79,26 @@ export default {
     name: 'Player',
     data() {
         return {
-            msg: '',
+            songReady: false, // 歌曲准备好没
+            currentTime: 0, // 当前播放时间
         }
     },
-    mounted() {
-        console.log(1, this.currentSong)
-    },
+    mounted() {},
     computed: {
-        ...mapGetters(['playList', 'fullScreen', 'currentSong']),
+        disabledCls() {
+            // 不可点击样式
+            return this.songReady ? '' : 'disable'
+        },
+        cdCls() {
+            return this.playing ? 'play' : 'play pause'
+        },
+        playIcon() {
+            return this.playing ? 'icon-pause' : 'icon-play'
+        },
+        miniIcon() {
+            return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+        },
+        ...mapGetters(['playList', 'fullScreen', 'currentSong', 'playing', 'currentIndex']),
     },
     methods: {
         doFullScreen(bool) {
@@ -146,9 +164,66 @@ export default {
                 scale,
             }
         },
+        ready() {
+            this.songReady = true
+        },
+        error() {
+            this.songReady = false
+        },
+        togglePLay() {
+            this.setPlayingState(!this.playing)
+        },
+        next() {
+            // if (!this.songReady) {
+            //     return
+            // }
+            let index = this.currentIndex + 1
+            if (index === this.playList.length) {
+                index = 0
+            }
+            this.setCurrentIndex(index)
+            if (!this.playing) {
+                this.togglePLay()
+            }
+            // 歌曲准备好置为false
+            this.songReady = true
+        },
+        prev() {
+            // 没有准备好歌曲就不切换
+            // if (!this.songReady) {
+            //     return
+            // }
+            let index = this.currentIndex - 1
+            if (index === -1) {
+                index = this.playList.length - 1
+            }
+            this.setCurrentIndex(index)
+            if (!this.playing) {
+                this.togglePLay()
+            }
+            this.songReady = false
+        },
+        updateTime(e) {
+            this.currentTime = e.target.currentTime
+        },
         ...mapMutations({
             setFullScreen: 'SET_FULL_SCREEN',
+            setPlayingState: 'SET_PLAYING_STATE',
+            setCurrentIndex: 'SET_CURRENT_INDEX',
         }),
+    },
+    watch: {
+        currentSong() {
+            this.$nextTick(() => {
+                this.$refs.audio.play()
+            })
+        },
+        playing(newval) {
+            this.$nextTick(() => {
+                const audio = this.$refs.audio
+                newval ? audio.play() : audio.pause()
+            })
+        },
     },
 }
 </script>
