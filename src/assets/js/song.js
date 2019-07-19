@@ -1,5 +1,5 @@
 export default class Song {
-  constructor({ id, mid, singer, name, album, duration, image, url }) {
+  constructor({ id, mid, singer, name, album, duration, image, url, text }) {
     this.id = id // 歌曲id
     this.mid = mid
     this.singer = singer //歌手
@@ -8,6 +8,7 @@ export default class Song {
     this.duration = duration //时长
     this.image = image //封面
     this.url = url //资源路径
+    this.text = '' //  歌曲数据
   }
 }
 export function createSong(musicData) {
@@ -22,6 +23,7 @@ export function createSong(musicData) {
     // url: `http://111.202.98.146/amobile.music.tc.qq.com/${musicData.songmid}.m4a?fromtag=46`,
     url:
       'http://111.202.98.146/amobile.music.tc.qq.com/C400001Qu4I30eVFYb.m4a?guid=1972071100&vkey=6AE257D4770E091643D98DCB4430A54D5419433942C4B0F2636DDDE8E6E649E3BD5F41FD6ED7B060E462EA18CD97BB8D39BA5546B7146BF1&uin=0&fromtag=66',
+    text: '',
   })
 }
 

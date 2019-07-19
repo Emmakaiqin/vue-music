@@ -9,7 +9,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/apis': {
+        target: 'https://c.y.qq.com/', // dev
+        secure: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/apis': '', // 需要rewrite的,
+        },
+      },
+    },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST

@@ -9,6 +9,8 @@ import { mapGetters } from 'vuex'
 import { getSingerDetail } from '@/api/singer'
 import { createSong } from '@/assets/js/song.js'
 import MusicList from '@components/music-list/music-list'
+import songText from '@assets/json/songText.json'
+import { Base64 } from 'js-base64'
 export default {
     components: { MusicList },
     data() {
@@ -18,7 +20,6 @@ export default {
     },
     created() {
         this._getDetail()
-        console.log('created:', this.singer)
     },
     methods: {
         _getDetail() {
@@ -35,10 +36,22 @@ export default {
         },
         _normalizeSongs(list) {
             let ret = []
-            list.forEach(item => {
+            let times = [156, 310, 255, 299, 263, 269] // 6个音频对应时间
+            list.forEach((item, index) => {
                 let { musicData } = item
                 if (musicData.songid && musicData.albumid) {
-                    ret.push(createSong(musicData))
+                    let song = createSong(musicData)
+                    // 随机下本地6个音频
+                    let i = index % 6
+                    song.url = require(`@/assets/music/${i}.mp3`)
+                    song.duration = times[i]
+                    // 歌词
+                    if (i == 5) {
+                        song.text = Base64.decode(songText[0].lyric)
+                    } else {
+                        song.text = Base64.decode(songText[i].lyric)
+                    }
+                    ret.push(song)
                 }
             })
             return ret
