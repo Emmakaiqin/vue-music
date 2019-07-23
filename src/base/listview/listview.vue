@@ -102,6 +102,10 @@ export default {
         selectItem(item) {
             this.$emit('selectItem', item)
         },
+        refresh() {
+            // 刷新
+            this.$refs.listview.refresh()
+        },
         // 私有方法放下面,共有方法和绑定事件放上面
         onShortcutTouchStart(e) {
             // 获取点击项的索引

@@ -1,6 +1,6 @@
 
 <template>
-    <div class="recommend">
+    <div class="recommend" ref="recommend">
         <scroll ref="scrolls" class="recommend-content" :data="discList">
             <div>
                 <div class="slider-wrapper" v-if="recommends.length">
@@ -47,8 +47,10 @@ import Slider from '@/base/slider/slider'
 import Loading from '@/base/loading/loading'
 import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
+import { playlistMixin } from '@/assets/js/mixin'
 import discList from './discList.json'
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             recommends: [],
@@ -66,6 +68,11 @@ export default {
         Loading,
     },
     methods: {
+        handlePlaylist(playList) {
+            const bottom = playList.length > 0 ? '60px' : ''
+            this.$refs.recommend.style.bottom = bottom
+            this.$refs.scrolls.refresh()
+        },
         loadImg() {
             if (!this.isLoaded) {
                 //第一次图片加载时刷新让BScroll滚动获取到轮播图的高度

@@ -24,6 +24,9 @@
                                 <img class="image" :src="currentSong.image" />
                             </div>
                         </div>
+                        <div class="playing-lyric-wrapper">
+                            <div class="playing-lyric">{{ playingLyric }}</div>
+                        </div>
                     </div>
                     <template v-if="currentLyric">
                         <scroll class="middle-r" ref="lyricList" :data="currentLyric.lines">
@@ -126,6 +129,7 @@ export default {
             currentLyric: '', // 当前歌词
             currentLineNum: 0, // 当前歌词所在行
             currentShow: 'cd', // 展示的列表 lycir--歌词
+            playingLyric: '', // 当前播放的歌词
         }
     },
     created() {
@@ -164,10 +168,14 @@ export default {
     },
     methods: {
         progressBarChange(precent) {
-            this.$refs.audio.currentTime = precent * this.currentSong.duration
+            let currentTime = precent * this.currentSong.duration
+            this.$refs.audio.currentTime = currentTime
             if (!this.playing) {
                 // 暂停的话就播放
                 this.togglePLay()
+            }
+            if (this.currentLyric) {
+                this.currentLyric.seek(currentTime * 1000) // 歌词跟随滚动条改变而改变
             }
         },
         doFullScreen(bool) {
@@ -269,15 +277,27 @@ export default {
             this.songReady = false
         },
         togglePLay() {
+            // 暂停或者播放切换
             this.setPlayingState(!this.playing)
+            if (this.currentLyric) {
+                // 歌词滚动状态也改变
+                this.currentLyric.togglePlay()
+            }
         },
         loop() {
             this.$refs.audio.currentTime = 0
             this.$refs.audio.play()
+            if (this.currentLyric) {
+                this.currentLyric.seek(0) // 歌词到初始化位置
+            }
         },
         next() {
             if (!this.songReady) {
                 return
+            }
+            if (this.playList.length === 1) {
+                // 单曲循环
+                this.loop()
             }
             let index = this.currentIndex + 1
             console.log(1, this.songReady, index)
@@ -295,6 +315,10 @@ export default {
             // 没有准备好歌曲就不切换
             if (!this.songReady) {
                 return
+            }
+            if (this.playList.length === 1) {
+                // 单曲循环
+                this.loop()
             }
             let index = this.currentIndex - 1
             if (index === -1) {
@@ -329,6 +353,7 @@ export default {
                 // 5行之内直接滚动到顶部
                 this.$refs.lyricList.scrollTo(0, 0, 1000)
             }
+            this.playingLyric = txt
         },
 
         middleTouchStart(e) {
@@ -339,9 +364,9 @@ export default {
             this.touch.startX = touch.pageX
             this.touch.startY = touch.pageY
         },
-      middleTouchMove(e) {
+        middleTouchMove(e) {
             if (!this.touch.initiated) {
-            return
+                return
             }
             const touch = e.touches[0]
             const deltaX = touch.pageX - this.touch.startX
@@ -357,15 +382,15 @@ export default {
             //  window.innerWidth 屏幕宽度 不能超出屏幕宽度
             const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
             this.touch.precent = Math.abs(offsetWidth / window.innerWidth)
-            this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0))`
+            this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0)`
             this.$refs.lyricList.$el.style.transitionDuration = 0
             this.$refs.middleL.style.opacity = 1 - this.touch.precent
             this.$refs.middleL.style.transitionDuration = 0
         },
         middleTouchEnd(e) {
-                    if (!this.touch.moved) {
-          return
-        }
+            if (!this.touch.moved) {
+                return
+            }
             // 决定滚动的位置 从右往左   从左往右
             let offsetWidth
             let opacity
@@ -391,7 +416,7 @@ export default {
                 }
             }
             const time = 300
-            this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0))`
+            this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0)`
             this.$refs.lyricList.$el.style.transitionDuration = `${time}ms`
             this.$refs.middleL.style.opacity = opacity
             this.$refs.middleL.style.transitionDuration = `${time}ms`
@@ -421,11 +446,15 @@ export default {
                 // 模式切换不触发歌曲数据改变
                 return
             }
-            this.$nextTick(() => {
+            if (this.currentLyric) {
+                // 切换时清除上一个歌词
+                this.currentLyric.stop()
+            }
+            setTimeout(() => {
                 this.$refs.audio.play()
                 // this.currentSong.getLyric()
                 this.getLyric()
-            })
+            }, 1000)
         },
         playing(newval) {
             this.$nextTick(() => {

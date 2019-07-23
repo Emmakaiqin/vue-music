@@ -36,7 +36,7 @@ export default {
         },
         _normalizeSongs(list) {
             let ret = []
-            let times = [156, 310, 255, 299, 263, 269] // 6个音频对应时间
+            let times = [156, 269, 255, 239, 310, 263] // 6个音频对应时间
             list.forEach((item, index) => {
                 let { musicData } = item
                 if (musicData.songid && musicData.albumid) {
