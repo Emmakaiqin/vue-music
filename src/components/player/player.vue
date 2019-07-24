@@ -28,23 +28,21 @@
                             <div class="playing-lyric">{{ playingLyric }}</div>
                         </div>
                     </div>
-                    <template v-if="currentLyric">
-                        <scroll class="middle-r" ref="lyricList" :data="currentLyric.lines">
-                            <div class="lyric-wrapper">
-                                <div v-if="currentLyric">
-                                    <p
-                                        ref="lyricLine"
-                                        class="text"
-                                        :class="{ current: currentLineNum === index }"
-                                        v-for="(line, index) in currentLyric.lines"
-                                        :key="index + 'lyric'"
-                                    >
-                                        {{ line.txt }}
-                                    </p>
-                                </div>
+                    <scroll v-show="currentLyric" class="middle-r" ref="lyricList" :data="currentLyric.lines">
+                        <div class="lyric-wrapper">
+                            <div v-if="currentLyric">
+                                <p
+                                    ref="lyricLine"
+                                    class="text"
+                                    :class="{ current: currentLineNum === index }"
+                                    v-for="(line, index) in currentLyric.lines"
+                                    :key="index + 'lyric'"
+                                >
+                                    {{ line.txt }}
+                                </p>
                             </div>
-                        </scroll>
-                    </template>
+                        </div>
+                    </scroll>
                 </div>
                 <div class="bottom">
                     <div class="dot-wrapper">
@@ -439,6 +437,7 @@ export default {
     },
     watch: {
         currentSong(newSong, oldSong) {
+            console.log(newSong)
             if (!newSong || !newSong.id) {
                 return
             }

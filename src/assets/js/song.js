@@ -1,3 +1,5 @@
+import { Base64 } from 'js-base64'
+import songText from '@assets/json/songText.json'
 export default class Song {
   constructor({ id, mid, singer, name, album, duration, image, url, text }) {
     this.id = id // 歌曲id
@@ -8,22 +10,20 @@ export default class Song {
     this.duration = duration //时长
     this.image = image //封面
     this.url = url //资源路径
-    this.text = '' //  歌曲数据
+    this.text = text //  歌曲数据
   }
 }
-export function createSong(musicData) {
+export function createSong(musicData, index) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
     singer: filterSinger(musicData.singer),
     album: musicData.albumname,
     name: musicData.songname,
-    duration: musicData.interval,
+    duration: makeDuration(index),
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    // url: `http://111.202.98.146/amobile.music.tc.qq.com/${musicData.songmid}.m4a?fromtag=46`,
-    url:
-      'http://111.202.98.146/amobile.music.tc.qq.com/C400001Qu4I30eVFYb.m4a?guid=1972071100&vkey=6AE257D4770E091643D98DCB4430A54D5419433942C4B0F2636DDDE8E6E649E3BD5F41FD6ED7B060E462EA18CD97BB8D39BA5546B7146BF1&uin=0&fromtag=66',
-    text: '',
+    url: makeUrl(index),
+    text: makeText(index),
   })
 }
 
@@ -33,7 +33,32 @@ function filterSinger(singer) {
     return ''
   }
   singer.forEach(s => {
-    ret.push(s.name)
+    if (s.name) {
+      ret.push(s.name)
+    }
   })
   return ret.join('/')
+}
+
+function makeDuration(index) {
+  let i = index % 6
+  let times = [156, 269, 255, 239, 310, 263] // 6个音频对应时间
+  return times[i]
+}
+function makeUrl(index) {
+  // 随机下本地6个音频
+  let i = index % 6
+  let url = require(`@/assets/music/${i}.mp3`)
+  return url
+}
+function makeText(index) {
+  // 歌词
+  let i = index % 6
+  let text = ''
+  if (i == 5) {
+    text = Base64.decode(songText[0].lyric)
+  } else {
+    text = Base64.decode(songText[i].lyric)
+  }
+  return text
 }

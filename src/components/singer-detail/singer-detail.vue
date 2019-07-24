@@ -36,22 +36,10 @@ export default {
         },
         _normalizeSongs(list) {
             let ret = []
-            let times = [156, 269, 255, 239, 310, 263] // 6个音频对应时间
             list.forEach((item, index) => {
                 let { musicData } = item
                 if (musicData.songid && musicData.albumid) {
-                    let song = createSong(musicData)
-                    // 随机下本地6个音频
-                    let i = index % 6
-                    song.url = require(`@/assets/music/${i}.mp3`)
-                    song.duration = times[i]
-                    // 歌词
-                    if (i == 5) {
-                        song.text = Base64.decode(songText[0].lyric)
-                    } else {
-                        song.text = Base64.decode(songText[i].lyric)
-                    }
-                    ret.push(song)
+                    ret.push(createSong(musicData, index))
                 }
             })
             return ret

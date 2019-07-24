@@ -46,6 +46,7 @@ export default {
             getSingerList().then(res => {
                 list = res.data
                 this.singers = this._normazileSingers(list.list)
+                console.log(this.singers)
             })
         },
         _normazileSingers(list) {

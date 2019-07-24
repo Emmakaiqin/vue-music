@@ -12,5 +12,7 @@ const types = {
   SET_SEQUENCE_LIST: 'SET_SEQUENCE_LIST', //  全屏
 
   SET_CURRENT_INDEX: 'SET_CURRENT_INDEX', //  当前播放项
+
+  SET_DISC: 'SET_DISC', //  推荐列表
 }
 export default types

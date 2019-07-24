@@ -15,7 +15,7 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li v-for="item in discList" :key="item.album.id" class="item">
+                        <li v-for="item in discList" :key="item.album.id" class="item" @click="selectItem(item)">
                             <div class="icon">
                                 <!--fastclick属性--needsclick,避免与BScroll click冲突-->
                                 <img
@@ -39,6 +39,7 @@
                 <loading></loading>
             </div>
         </scroll>
+        <router-view></router-view>
     </div>
 </template>
 <script>
@@ -49,6 +50,7 @@ import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { playlistMixin } from '@/assets/js/mixin'
 import discList from './discList.json'
+import { mapMutations } from 'vuex'
 export default {
     mixins: [playlistMixin],
     data() {
@@ -72,6 +74,12 @@ export default {
             const bottom = playList.length > 0 ? '60px' : ''
             this.$refs.recommend.style.bottom = bottom
             this.$refs.scrolls.refresh()
+        },
+        selectItem(item) {
+            //
+            console.log('selectItem:', item)
+            this.$router.push({ path: `/recommend/${item.album.mid}` })
+            this.setDisc(item)
         },
         loadImg() {
             if (!this.isLoaded) {
@@ -100,6 +108,9 @@ export default {
                 return { album, url, singerName }
             })
         },
+        ...mapMutations({
+            setDisc: 'SET_DISC',
+        }),
     },
 }
 </script>
