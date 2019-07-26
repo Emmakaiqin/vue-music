@@ -116,6 +116,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import '~@assets/css/variable'
+@import '~@assets/css/mixin'
 .recommend
     position fixed
     width 100%

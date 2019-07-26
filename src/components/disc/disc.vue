@@ -1,5 +1,5 @@
 <template>
-    <transition class="slide">
+    <transition name="disc-slide">
         <music-list :bgImage="bgImage" :title="title" :songs="songlist"></music-list>
     </transition>
 </template>
@@ -64,9 +64,9 @@ export default {
 <style scoped lang="stylus">
 @import '~@assets/css/variable'
 @import '~@assets/css/mixin'
-.slide-enter-active, .slide-leave-active
+.disc-slide-enter-active, .disc-slide-leave-active
     transition all 0.3s
-.slide-enter, .slide-leave-to
+.disc-slide-enter, .disc-slide-leave-to
     transform translate3d(100%, 0, 0)
 </style>
 

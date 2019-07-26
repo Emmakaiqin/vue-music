@@ -91,7 +91,9 @@ export default {
             this.$refs.list.refresh()
         },
         back() {
-            this.$router.push('/singer')
+            // 匹配路由返回
+            let path = this.$route.fullPath.match(/^\/(\S*)\//gi)
+            this.$router.push(path[0])
         },
         scroll(pos) {
             this.scrollY = pos.y
