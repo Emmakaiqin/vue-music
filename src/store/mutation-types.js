@@ -14,5 +14,7 @@ const types = {
   SET_CURRENT_INDEX: 'SET_CURRENT_INDEX', //  当前播放项
 
   SET_DISC: 'SET_DISC', //  推荐列表
+
+  SET_TOP_LIST: 'SET_TOP_LIST', //  排行榜列表
 }
 export default types

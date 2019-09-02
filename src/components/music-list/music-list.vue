@@ -23,7 +23,7 @@
             ref="list"
         >
             <div class="song-list-wrapper">
-                <song-list @selectItem="selectItem" :songs="songs"></song-list>
+                <song-list :rank="rank" @selectItem="selectItem" :songs="songs"></song-list>
             </div>
         </scroll>
         <div class="loading-container" v-show="!songs || !songs.length">
@@ -55,6 +55,10 @@ export default {
         }
     },
     props: {
+        rank: {
+            type: Boolean,
+            default: false,
+        },
         bgImage: {
             type: String,
             default: '',

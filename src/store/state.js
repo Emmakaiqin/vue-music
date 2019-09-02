@@ -8,7 +8,8 @@ const state = {
   sequenceList: [], // 播放列表
   mode: playMode.sequence, //   播放模式
   currentIndex: -1, // 当前播放项
-  disc: '', // 推荐的数据
+  disc: {}, // 推荐的数据
+  topList: {}, // 排行榜数据
 }
 
 export default state
