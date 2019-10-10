@@ -27,6 +27,11 @@ export default {
             type: Boolean,
             default: false,
         },
+        pullup: {
+            // 是否上拉加载
+            type: Boolean,
+            default: false,
+        },
     },
 
     data() {
@@ -51,6 +56,14 @@ export default {
                 //监听高度变化
                 this.scroll.on('scroll', pos => {
                     this.$emit('scroll', pos)
+                })
+            }
+            if (this.pullup) {
+                //  上拉加载
+                this.scroll.on('scrollEnd', () => {
+                    if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+                        this.$emit('scrollToEnd')
+                    }
                 })
             }
         },
