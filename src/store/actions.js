@@ -31,3 +31,12 @@ export function randomPlay({ commit }, { list }) {
   commit(types.SET_PLAYING_STATE, true)
   commit(types.SET_FULL_SCREEN, true)
 }
+
+// 播放列表插入歌曲
+export function insertSong({ commit, state }, song) {
+  let playList = state.playList // 播放列表 不同顺序播放列表
+  let sequenceList = state.sequenceList // 播放列表
+  let currentIndex = state.currentIndex // 当前播放项
+  // 记录当前歌曲
+  let currentSong = playList[currentIndex]
+}
